@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MB Electric — Energía Solar y Cargadores EV</title>
+<style>
+  :root {
+    --sol: #F5A623;
+    --sol-deep: #C97D0E;
+    --cielo: #0A1628;
+    --cielo-mid: #132238;
+    --brisa: #E8F4F8;
+    --blanco: #FFFFFF;
+    --texto: #1A2332;
+    --texto-light: #5A6A7A;
+    --verde: #2ECC71;
+    --radius: 12px;
+    --shadow: 0 4px 24px rgba(10,22,40,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--texto);
+    background: var(--blanco);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,22,40,0.97);
+    backdrop-filter: blur(8px);
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .nav-logo {
+    font-size: 20px; font-weight: 700; color: var(--sol);
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: var(--blanco); }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    color: rgba(255,255,255,0.75); text-decoration: none;
+    font-size: 14px; font-weight: 500; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--sol); }
+  .nav-cta {
+    background: var(--sol); color: var(--cielo);
+    border: none; padding: 9px 20px; border-radius: 8px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    text-decoration: none; transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--sol-deep); color: #fff; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(160deg, var(--cielo) 0%, #0D2244 60%, #183560 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 100px 5% 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 70% 30%, rgba(245,166,35,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(245,166,35,0.15);
+    border: 1px solid rgba(245,166,35,0.35);
+    color: var(--sol);
+    font-size: 12px; font-weight: 600;
+    padding: 6px 16px; border-radius: 20px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 800; color: var(--blanco);
+    line-height: 1.1; letter-spacing: -2px;
+    margin-bottom: 20px; max-width: 800px;
+  }
+  .hero h1 em {
+    font-style: normal; color: var(--sol);
+  }
+  .hero p {
+    font-size: clamp(16px, 2vw, 20px);
+    color: rgba(255,255,255,0.70);
+    max-width: 560px; margin: 0 auto 40px;
+  }
+  .hero-btns {
+    display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+  }
+  .btn-primary {
+    background: var(--sol); color: var(--cielo);
+    padding: 14px 32px; border-radius: var(--radius);
+    font-size: 16px; font-weight: 700;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: all 0.2s; display: inline-block;
+  }
+  .btn-primary:hover { background: var(--sol-deep); color: #fff; transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent; color: var(--blanco);
+    padding: 14px 32px; border-radius: var(--radius);
+    font-size: 16px; font-weight: 600;
+    text-decoration: none; border: 1.5px solid rgba(255,255,255,0.3); cursor: pointer;
+    transition: all 0.2s; display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--sol); color: var(--sol); }
+
+  .hero-stats {
+    display: flex; gap: 48px; margin-top: 64px;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 36px; font-weight: 800; color: var(--sol); line-height: 1; }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.55); margin-top: 4px; }
+
+  /* SECCIONES GENERALES */
+  section { padding: 80px 5%; }
+  .section-tag {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--sol); margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: clamp(28px, 4vw, 42px); font-weight: 800;
+    color: var(--texto); line-height: 1.15; letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    font-size: 17px; color: var(--texto-light);
+    max-width: 540px; margin-bottom: 48px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* SERVICIOS */
+  .servicios { background: var(--brisa); }
+  .servicios-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .servicio-card {
+    background: var(--blanco); border-radius: var(--radius);
+    padding: 32px; box-shadow: var(--shadow);
+    border-top: 4px solid var(--sol);
+    transition: transform 0.2s;
+  }
+  .servicio-card:hover { transform: translateY(-4px); }
+  .servicio-icon {
+    font-size: 40px; margin-bottom: 16px; display: block;
+  }
+  .servicio-card h3 {
+    font-size: 20px; font-weight: 700; margin-bottom: 10px; color: var(--texto);
+  }
+  .servicio-card p { font-size: 15px; color: var(--texto-light); margin-bottom: 16px; }
+  .servicio-precio {
+    font-size: 13px; font-weight: 600; color: var(--sol-deep);
+    background: rgba(245,166,35,0.10); padding: 6px 12px;
+    border-radius: 6px; display: inline-block;
+  }
+
+  /* CALCULADORA */
+  .calculadora { background: var(--cielo); }
+  .calculadora .section-title { color: var(--blanco); }
+  .calculadora .section-sub { color: rgba(255,255,255,0.60); }
+  .calc-wrap {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 32px; align-items: start;
+  }
+  .calc-form {
+    background: var(--cielo-mid); border-radius: var(--radius);
+    padding: 32px; border: 1px solid rgba(255,255,255,0.08);
+  }
+  .calc-field { margin-bottom: 24px; }
+  .calc-field label {
+    display: block; font-size: 13px; font-weight: 600;
+    color: rgba(255,255,255,0.70); margin-bottom: 8px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .calc-field input, .calc-field select {
+    width: 100%; background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; padding: 12px 16px;
+    color: var(--blanco); font-size: 16px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .calc-field input:focus, .calc-field select:focus {
+    border-color: var(--sol);
+  }
+  .calc-field select option { background: var(--cielo); }
+  .calc-slider { width: 100%; accent-color: var(--sol); height: 6px; }
+  .calc-slider-val {
+    text-align: right; font-size: 13px;
+    color: var(--sol); font-weight: 700; margin-top: 6px;
+  }
+  .btn-calc {
+    width: 100%; background: var(--sol); color: var(--cielo);
+    border: none; padding: 14px; border-radius: 10px;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    transition: all 0.2s; margin-top: 8px;
+  }
+  .btn-calc:hover { background: var(--sol-deep); color: #fff; }
+
+  .calc-resultado {
+    background: var(--cielo-mid); border-radius: var(--radius);
+    padding: 32px; border: 1px solid rgba(255,255,255,0.08);
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .resultado-titulo {
+    font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.50);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .resultado-item {
+    padding: 16px 20px; border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    border-left: 3px solid var(--sol);
+  }
+  .resultado-label {
+    font-size: 12px; color: rgba(255,255,255,0.50); margin-bottom: 4px;
+  }
+  .resultado-val {
+    font-size: 28px; font-weight: 800; color: var(--blanco); line-height: 1;
+  }
+  .resultado-val.verde { color: var(--verde); }
+  .resultado-val.sol { color: var(--sol); }
+  .resultado-sub {
+    font-size: 12px; color: rgba(255,255,255,0.40); margin-top: 4px;
+  }
+  .resultado-inicial {
+    text-align: center; padding: 40px 20px;
+    color: rgba(255,255,255,0.30); font-size: 15px;
+  }
+  .resultado-inicial span { font-size: 48px; display: block; margin-bottom: 12px; }
+
+  /* PROCESO */
+  .proceso-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px; counter-reset: paso;
+  }
+  .proceso-card {
+    padding: 28px 24px; border-radius: var(--radius);
+    border: 1px solid #E5EBF0; position: relative;
+    counter-increment: paso;
+  }
+  .proceso-card::before {
+    content: counter(paso);
+    position: absolute; top: 20px; right: 20px;
+    font-size: 48px; font-weight: 900;
+    color: rgba(245,166,35,0.12); line-height: 1;
+    font-family: 'Georgia', serif;
+  }
+  .proceso-icon { font-size: 32px; margin-bottom: 14px; display: block; }
+  .proceso-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .proceso-card p { font-size: 14px; color: var(--texto-light); }
+
+  /* SUBSIDIO BANNER */
+  .subsidio-banner {
+    background: linear-gradient(135deg, #0A6E3A 0%, #1A9E55 100%);
+    border-radius: var(--radius); padding: 40px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; flex-wrap: wrap;
+  }
+  .subsidio-banner h3 {
+    font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px;
+  }
+  .subsidio-banner p { font-size: 15px; color: rgba(255,255,255,0.80); max-width: 480px; }
+  .subsidio-badge {
+    background: #fff; color: #0A6E3A;
+    font-size: 28px; font-weight: 900;
+    padding: 16px 28px; border-radius: 10px; white-space: nowrap;
+    text-align: center;
+  }
+  .subsidio-badge small { display: block; font-size: 12px; font-weight: 600; opacity: 0.7; }
+
+  /* TESTIMONIOS */
+  .testimonios { background: var(--brisa); }
+  .test-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .test-card {
+    background: var(--blanco); border-radius: var(--radius);
+    padding: 28px; box-shadow: var(--shadow);
+  }
+  .test-stars { color: var(--sol); font-size: 18px; margin-bottom: 12px; }
+  .test-texto { font-size: 15px; color: var(--texto); margin-bottom: 20px; font-style: italic; }
+  .test-autor { font-size: 13px; font-weight: 700; color: var(--texto); }
+  .test-lugar { font-size: 12px; color: var(--texto-light); }
+
+  /* CTA FINAL */
+  .cta-final {
+    background: linear-gradient(160deg, var(--cielo) 0%, #0D2244 100%);
+    text-align: center; padding: 100px 5%;
+  }
+  .cta-final h2 {
+    font-size: clamp(28px, 4vw, 48px); font-weight: 800;
+    color: var(--blanco); margin-bottom: 16px;
+  }
+  .cta-final h2 em { font-style: normal; color: var(--sol); }
+  .cta-final p { font-size: 17px; color: rgba(255,255,255,0.65); margin-bottom: 36px; }
+
+  /* CONTACTO */
+  .contacto-form {
+    max-width: 560px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .contacto-form input, .contacto-form select, .contacto-form textarea {
+    padding: 14px 18px; border-radius: 10px;
+    border: 1.5px solid #DDE4EA; font-size: 15px;
+    outline: none; font-family: inherit;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .contacto-form input:focus, .contacto-form select:focus, .contacto-form textarea:focus {
+    border-color: var(--sol);
+  }
+  .contacto-form textarea { min-height: 110px; resize: vertical; }
+
+  /* FOOTER */
+  footer {
+    background: var(--cielo); padding: 40px 5%;
+    text-align: center;
+  }
+  .footer-logo { font-size: 22px; font-weight: 800; color: var(--sol); margin-bottom: 8px; }
+  .footer-logo span { color: var(--blanco); }
+  footer p { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 4px; }
+  .footer-links { display: flex; gap: 24px; justify-content: center; margin: 16px 0; flex-wrap: wrap; }
+  .footer-links a { font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; }
+  .footer-links a:hover { color: var(--sol); }
+
+  .whatsapp-fab {
+    position: fixed; bottom: 28px; right: 28px; z-index: 200;
+    background: #25D366; color: #fff;
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; text-decoration: none;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.5);
+    transition: transform 0.2s;
+  }
+  .whatsapp-fab:hover { transform: scale(1.1); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .calc-wrap { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-stats { gap: 28px; }
+    .subsidio-banner { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">MB<span> Electric</span></div>
+  <div class="nav-links">
+    <a href="#servicios">Servicios</a>
+    <a href="#calculadora">Calculadora</a>
+    <a href="#proceso">Proceso</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+  <a href="#contacto" class="nav-cta">Cotización gratis</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">☀️ Cartagena · Costa Caribe · Colombia</div>
+  <h1>Genera tu propia energía.<br><em>Paga menos.</em> Vive mejor.</h1>
+  <p>Instalamos sistemas solares residenciales y comerciales, y cargadores para carros eléctricos en toda Colombia. Con experiencia en el Caribe colombiano.</p>
+  <div class="hero-btns">
+    <a href="#calculadora" class="btn-primary">Calcula tu ahorro</a>
+    <a href="#servicios" class="btn-outline">Ver servicios</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">+50</div>
+      <div class="stat-label">Instalaciones realizadas</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">$0</div>
+      <div class="stat-label">Visita técnica</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">24h</div>
+      <div class="stat-label">Respuesta garantizada</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Legal RETIE/UPME</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section class="servicios" id="servicios">
+  <div class="container">
+    <div class="section-tag">Lo que hacemos</div>
+    <h2 class="section-title">Dos servicios,<br>una sola empresa de confianza</h2>
+    <p class="section-sub">Óscar Moreno y el equipo de MB Electric llevan años instalando sistemas eléctricos en la Costa Caribe. Ahora con tecnología solar y EV.</p>
+    <div class="servicios-grid">
+      <div class="servicio-card">
+        <span class="servicio-icon">☀️</span>
+        <h3>Sistema Solar Residencial</h3>
+        <p>Paneles fotovoltaicos, inversor, baterías y conexión on grid. Reducís hasta un 90% tu recibo de Afinia. Instalación en un día, gestión de trámites incluida.</p>
+        <span class="servicio-precio">Desde $10.000.000 · Financiación FNA disponible</span>
+      </div>
+      <div class="servicio-card">
+        <span class="servicio-icon">🏭</span>
+        <h3>Solar Comercial e Industrial</h3>
+        <p>Para restaurantes, hoteles, clínicas y empresas con recibos altos. ROI en 3–5 años. Sistemas desde 5 kW hasta capacidades industriales.</p>
+        <span class="servicio-precio">Desde $40.000.000 · Beneficio tributario Ley 1715</span>
+      </div>
+      <div class="servicio-card">
+        <span class="servicio-icon">⚡</span>
+        <h3>Cargador EV Residencial</h3>
+        <p>Wallbox de 7,4 kW a 22 kW para tu garaje o parqueadero. Carga tu carro en 4–6 horas. Compatible con BYD, Tesla, Kia, Chery y todas las marcas.</p>
+        <span class="servicio-precio">Desde $3.000.000 instalado · Mismo día</span>
+      </div>
+      <div class="servicio-card">
+        <span class="servicio-icon">🏢</span>
+        <h3>Infraestructura EV para Conjuntos</h3>
+        <p>Adecuación eléctrica para copropiedades. Cumplimiento Resolución 0337 de 2026. Desde la subestación hasta cada punto de carga. Gestión ante la asamblea.</p>
+        <span class="servicio-precio">Cotización por proyecto · Req. normativa 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUBSIDIO BANNER -->
+<section style="padding: 0 5% 60px; background: var(--brisa);">
+  <div class="container">
+    <div class="subsidio-banner">
+      <div>
+        <h3>🇨🇴 Programa Colombia Solar</h3>
+        <p>El gobierno subsidia hasta el 60% del costo de tu sistema solar si eres de estrato 1, 2 o 3. MB Electric te ayuda a aplicar al subsidio y gestiona todo el trámite sin costo adicional.</p>
+      </div>
+      <div class="subsidio-badge">
+        Hasta $20M
+        <small>de subsidio disponible</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULADORA -->
+<section class="calculadora" id="calculadora">
+  <div class="container">
+    <div class="section-tag" style="color:var(--sol)">Calculadora de ahorro</div>
+    <h2 class="section-title" style="color:#fff">¿Cuánto puedes ahorrar<br>con energía solar?</h2>
+    <p class="section-sub">Ingresa los datos de tu recibo y calcula tu ahorro estimado en segundos. Sin registrarte, sin compromiso.</p>
+    <div class="calc-wrap">
+      <div class="calc-form">
+        <div class="calc-field">
+          <label>Tu recibo mensual de energía ($)</label>
+          <input type="number" id="recibo" placeholder="Ej: 350000" min="0">
+        </div>
+        <div class="calc-field">
+          <label>Consumo mensual (kWh)</label>
+          <input type="number" id="kwh" placeholder="Ej: 300">
+        </div>
+        <div class="calc-field">
+          <label>Tipo de inmueble</label>
+          <select id="tipo">
+            <option value="residencial">Casa / Apartamento</option>
+            <option value="comercial">Comercio / Empresa</option>
+            <option value="industrial">Industrial / Bodega</option>
+          </select>
+        </div>
+        <div class="calc-field">
+          <label>Área de techo disponible (m²) — <span id="areaVal">30</span> m²</label>
+          <input type="range" class="calc-slider" id="area" min="10" max="200" value="30" oninput="document.getElementById('areaVal').textContent=this.value">
+        </div>
+        <div class="calc-field">
+          <label>Estrato</label>
+          <select id="estrato">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </div>
+        <button class="btn-calc" onclick="calcular()">Calcular mi ahorro ☀️</button>
+      </div>
+
+      <div class="calc-resultado" id="resultado">
+        <div class="resultado-inicial">
+          <span>🌤️</span>
+          Ingresa los datos de tu recibo y presiona calcular para ver tu ahorro estimado.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section id="proceso">
+  <div class="container">
+    <div class="section-tag">Cómo funciona</div>
+    <h2 class="section-title">De la cotización<br>a la instalación</h2>
+    <p class="section-sub">Un proceso simple, transparente y rápido. Tú nos dices cuánto pagas — nosotros hacemos el resto.</p>
+    <div class="proceso-grid">
+      <div class="proceso-card">
+        <span class="proceso-icon">📞</span>
+        <h4>Nos contactas</h4>
+        <p>Por WhatsApp, formulario o Instagram. Respondes en menos de 2 horas hábiles.</p>
+      </div>
+      <div class="proceso-card">
+        <span class="proceso-icon">🏠</span>
+        <h4>Visita técnica gratis</h4>
+        <p>Óscar visita tu inmueble, evalúa el techo, mide la irradiación y diseña el sistema ideal.</p>
+      </div>
+      <div class="proceso-card">
+        <span class="proceso-icon">📋</span>
+        <h4>Cotización en 24h</h4>
+        <p>Recibes una propuesta detallada con el sistema, costo, ahorro proyectado y opciones de financiación.</p>
+      </div>
+      <div class="proceso-card">
+        <span class="proceso-icon">🔧</span>
+        <h4>Instalación en 1 día</h4>
+        <p>El equipo certifiado de MB Electric instala, conecta y verifica el sistema. Todo bajo norma RETIE.</p>
+      </div>
+      <div class="proceso-card">
+        <span class="proceso-icon">📊</span>
+        <h4>Monitoreo y soporte</h4>
+        <p>App de monitoreo en tiempo real. Soporte técnico y garantía post-instalación incluidos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="testimonios">
+  <div class="container">
+    <div class="section-tag">Lo que dicen nuestros clientes</div>
+    <h2 class="section-title">Familias y empresas<br>que ya pagan menos</h2>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-texto">"Mi recibo bajó de $480.000 a $62.000 en el primer mes. Óscar fue muy profesional y la instalación quedó perfecta. Lo recomiendo con los ojos cerrados."</p>
+        <div class="test-autor">Carlos Mendoza</div>
+        <div class="test-lugar">Casa en Manga, Cartagena</div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-texto">"En el restaurante teníamos un recibo de $2.8 millones mensuales. Con el sistema solar instalado por MB Electric ya vamos en $380.000. El ROI fue en menos de 4 años."</p>
+        <div class="test-autor">Patricia Suárez</div>
+        <div class="test-lugar">Restaurante en Bocagrande</div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-texto">"Instalaron el cargador para mi BYD en medio día. Ahora cargo el carro en casa y ahorro $180.000 al mes vs. lo que gastaba en electrolineras. Excelente servicio."</p>
+        <div class="test-autor">Andrés Palmera</div>
+        <div class="test-lugar">Apartamento en El Laguito</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL + CONTACTO -->
+<section class="cta-final" id="contacto">
+  <h2>El sol en Cartagena brilla<br><em>todos los días del año.</em></h2>
+  <p>Aprovecha ese recurso gratis para reducir tu recibo. Cotización sin costo, visita técnica gratis, respuesta en 24 horas.</p>
+
+  <div class="contacto-form">
+    <input type="text" placeholder="Tu nombre completo" id="cnombre">
+    <input type="tel" placeholder="Tu WhatsApp (con indicativo +57)" id="ctel">
+    <input type="email" placeholder="Tu correo electrónico" id="ccorreo">
+    <select id="cservicio">
+      <option value="">¿Qué necesitas?</option>
+      <option>Sistema solar residencial</option>
+      <option>Sistema solar comercial/industrial</option>
+      <option>Cargador EV residencial</option>
+      <option>Infraestructura EV para conjunto</option>
+      <option>No estoy seguro — quiero asesoría</option>
+    </select>
+    <input type="text" placeholder="¿Cuánto pagas de energía al mes? (ej: $350.000)" id="cpago">
+    <textarea placeholder="Cuéntanos algo más sobre tu inmueble o proyecto (opcional)" id="cdetalle"></textarea>
+    <button class="btn-primary" onclick="enviarWA()" style="font-size:16px; padding:16px;">
+      📲 Enviar por WhatsApp
+    </button>
+    <p style="font-size:13px; color:rgba(255,255,255,0.35); margin-top:4px;">Te redirige a WhatsApp con tu mensaje prellenado. Sin formularios complicados.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">MB<span> Electric</span></div>
+  <div class="footer-links">
+    <a href="#servicios">Servicios</a>
+    <a href="#calculadora">Calculadora</a>
+    <a href="#proceso">Proceso</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+  <p>MB Electric SAS · Cartagena de Indias, Colombia · CIIU 4321 · 2026</p>
+  <p style="margin-top:6px;">Instalaciones bajo norma RETIE · Registro UPME · Ley 1715 de 2014</p>
+</footer>
+
+<!-- WhatsApp FAB -->
+<a href="https://wa.me/573015155592?text=Hola%20MB%20Electric%2C%20quiero%20una%20cotizaci%C3%B3n%20de%20energ%C3%ADa%20solar" class="whatsapp-fab" target="_blank" title="Escríbenos por WhatsApp">💬</a>
+
+<script>
+function calcular() {
+  const recibo = parseFloat(document.getElementById('recibo').value) || 0;
+  const kwh = parseFloat(document.getElementById('kwh').value) || 0;
+  const tipo = document.getElementById('tipo').value;
+  const area = parseFloat(document.getElementById('area').value) || 30;
+  const estrato = parseInt(document.getElementById('estrato').value) || 4;
+
+  if (recibo < 10000 && kwh < 10) {
+    document.getElementById('resultado').innerHTML = `
+      <div class="resultado-inicial"><span>⚠️</span>Ingresa tu recibo mensual o consumo en kWh para calcular.</div>`;
+    return;
+  }
+
+  // Cálculo base
+  const reciboBase = recibo || kwh * 820;
+  const kwhBase = kwh || recibo / 820;
+
+  // Paneles estimados (1 panel = ~400W, genera ~160 kWh/mes en Caribe)
+  const panelesPosibles = Math.min(Math.floor(area / 2), Math.floor(kwhBase / 160) + 2);
+  const paneles = Math.max(2, Math.min(panelesPosibles, 20));
+  const generacion = paneles * 160;
+  const coberturaReal = Math.min(generacion / kwhBase, 0.92);
+  const coberturaPct = Math.round(coberturaReal * 100);
+
+  // Ahorro mensual y anual
+  const ahorroMensual = Math.round(reciboBase * coberturaReal);
+  const ahorroAnual = ahorroMensual * 12;
+  const nuevoRecibo = Math.round(reciboBase - ahorroMensual);
+
+  // Costo estimado del sistema
+  const costoPorPanel = tipo === 'industrial' ? 1800000 : tipo === 'comercial' ? 2000000 : 2200000;
+  const costoSistema = paneles * costoPorPanel;
+
+  // Subsidio si aplica
+  const subsidio = estrato <= 3 ? Math.min(costoSistema * 0.60, 20000000) : 0;
+  const costoNeto = costoSistema - subsidio;
+
+  // ROI
+  const mesesROI = Math.ceil(costoNeto / ahorroMensual);
+  const aniosROI = (mesesROI / 12).toFixed(1);
+
+  // CO2
+  const co2Anual = (generacion * 12 * 0.000185).toFixed(1);
+
+  const fmt = (n) => '$' + Math.round(n).toLocaleString('es-CO');
+
+  document.getElementById('resultado').innerHTML = `
+    <div class="resultado-titulo">Tu ahorro estimado con MB Electric</div>
+    <div class="resultado-item">
+      <div class="resultado-label">Ahorro mensual estimado</div>
+      <div class="resultado-val verde">${fmt(ahorroMensual)}</div>
+      <div class="resultado-sub">Tu nuevo recibo aproximado: ${fmt(nuevoRecibo)}/mes</div>
+    </div>
+    <div class="resultado-item">
+      <div class="resultado-label">Ahorro en 12 meses</div>
+      <div class="resultado-val sol">${fmt(ahorroAnual)}</div>
+      <div class="resultado-sub">Cobertura solar estimada: ${coberturaPct}% de tu consumo</div>
+    </div>
+    <div class="resultado-item">
+      <div class="resultado-label">Sistema recomendado</div>
+      <div class="resultado-val" style="font-size:20px;color:#fff">${paneles} paneles · ${(paneles*0.4).toFixed(1)} kW</div>
+      <div class="resultado-sub">Genera ~${Math.round(generacion*12/1000)} MWh/año en Cartagena</div>
+    </div>
+    <div class="resultado-item">
+      <div class="resultado-label">Inversión estimada</div>
+      <div class="resultado-val" style="font-size:20px;color:#fff">${fmt(costoSistema)}</div>
+      ${subsidio > 0 ? `<div class="resultado-sub" style="color:var(--verde)">✅ Subsidio Colombia Solar disponible: -${fmt(subsidio)} → Costo neto: ${fmt(costoNeto)}</div>` : ''}
+    </div>
+    <div class="resultado-item">
+      <div class="resultado-label">Recuperas tu inversión en</div>
+      <div class="resultado-val sol">${aniosROI} años</div>
+      <div class="resultado-sub">El sistema dura +25 años · Ahorro neto de ${fmt((ahorroAnual*25)-costoNeto)} en 25 años</div>
+    </div>
+    <div class="resultado-item">
+      <div class="resultado-label">Impacto ambiental</div>
+      <div class="resultado-val" style="font-size:20px;color:#2ECC71">${co2Anual} ton CO₂/año</div>
+      <div class="resultado-sub">Equivalente a no usar ${Math.round(co2Anual*450)} litros de gasolina</div>
+    </div>
+    <a href="#contacto" class="btn-calc" style="text-align:center;text-decoration:none;display:block;margin-top:8px">
+      Quiero esta cotización gratis →
+    </a>
+  `;
+}
+
+function enviarWA() {
+  const nombre = document.getElementById('cnombre').value;
+  const tel = document.getElementById('ctel').value;
+  const correo = document.getElementById('ccorreo').value;
+  const servicio = document.getElementById('cservicio').value;
+  const pago = document.getElementById('cpago').value;
+  const detalle = document.getElementById('cdetalle').value;
+
+  if (!nombre || !tel) {
+    alert('Por favor ingresa tu nombre y número de WhatsApp.');
+    return;
+  }
+
+  const msg = `Hola MB Electric 👋
+
+*Nombre:* ${nombre}
+*WhatsApp:* ${tel}
+*Correo:* ${correo || 'No indicado'}
+*Servicio de interés:* ${servicio || 'No indicado'}
+*Recibo mensual aprox:* ${pago || 'No indicado'}
+*Detalle:* ${detalle || 'Sin detalle adicional'}
+
+Me gustaría recibir una cotización gratuita.`;
+
+  // Reemplaza XXXXXXXXXX con el número real de Óscar
+  const waURL = `https://wa.me/573015155592?text=${encodeURIComponent(msg)}`;
+  window.open(waURL, '_blank');
+}
+</script>
+
+</body>
+</html>
